@@ -1,4 +1,3 @@
-﻿
 using System.Collections;
 using UnityEngine;
 
@@ -20,8 +19,8 @@ public class movement : MonoBehaviour
 
     public float dashDistance = 15f;
     bool isDashing;
-    float doubleTapTime;
-    KeyCode lastKeyCode;
+    bool PressShift;
+    
 
 
 
@@ -72,97 +71,74 @@ public class movement : MonoBehaviour
             extraJump = extraJumpValue;
         }
 
-        // Dash
+        // appelle de la fonction Shift
 
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            if (doubleTapTime > Time.time && lastKeyCode == KeyCode.A)
-            {
-                StartCoroutine(Dash(-1f));
-                
-                
-                
-            }
+            PressShift = true;
 
-            else
-            {
-                doubleTapTime = Time.time + 0.5f;
-            }
-
-            lastKeyCode = KeyCode.A;
         }
 
-        if (Input.GetKeyDown(KeyCode.D))
+        else
         {
-            if (doubleTapTime > Time.time && lastKeyCode == KeyCode.D)
+            PressShift = false;
+
+        }
+
+       
+        //dash
+        if(PressShift == true)
+        {
+            if (Input.GetKeyDown(KeyCode.A))
             {
-                StartCoroutine(Dash(1f));
+                transform.position += new Vector3(-dashDistance, 0, 0);
                 
+
             }
 
-            else
+        }
+
+        if (PressShift == true)
+        {
+            if (Input.GetKeyDown(KeyCode.D))
             {
-                doubleTapTime = Time.time + 0.5f;
+                transform.position += new Vector3(dashDistance, 0, 0);
+
+
             }
 
-            lastKeyCode = KeyCode.D;
+        }
 
-
+        if (PressShift == true)
+        {
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                if (doubleTapTime > Time.time && lastKeyCode == KeyCode.LeftArrow)
-                {
-                    StartCoroutine(Dash(1f));
+                transform.position += new Vector3(-dashDistance, 0, 0);
 
 
-
-                }
-
-                else
-                {
-                    doubleTapTime = Time.time + 0.5f;
-                }
-
-                lastKeyCode = KeyCode.LeftArrow;
             }
 
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                if (doubleTapTime > Time.time && lastKeyCode == KeyCode.RightArrow)
-                {
-                    StartCoroutine(Dash(-1f));
-
-
-
-                }
-
-                else
-                {
-                    doubleTapTime = Time.time + 0.5f;
-                }
-
-                lastKeyCode = KeyCode.RightArrow;
-            }
         }
 
-     void FixedUpdate()
-    {
+        if (PressShift == true)
+        {
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                transform.position += new Vector3(dashDistance, 0, 0);
+
+
+            }
+
+        }
+
+        void FixedUpdate()
+        {
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, WhatIsGround);
        
-    }
+        }
 
-    IEnumerator Dash(float direction)
-    {
-        isDashing = true;
-        RB2D.velocity = new Vector2(RB2D.velocity.x, 0f);
-        RB2D.AddForce(new Vector2(dashDistance * direction, 0f), ForceMode2D.Impulse);
-        RB2D.gravityScale = 0f;
-        yield return new WaitForSeconds(0.1f);
-        isDashing = false;
-        RB2D.gravityScale = 3;
-        RB2D.velocity = new Vector2 (0,0);
+  
     }
 
 
-    }
-}
+} 
